@@ -18,19 +18,47 @@
       input {
         margin: 5px;
       }
+      canvas {
+        display: block;
+      }
+
+      #equations {
+        color: white;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+      }
+
+     
     </style>
   </head>
   <body>
     <script src="main.js"></script>
-    <div id="inputs-container">
-      <label for="input-x">X:</label>
-      <input id="input-x" type="number" value="0">
-      <br>
-      <label for="input-y">Y:</label>
-      <input id="input-y" type="number" value="0">
-      <br>
-      <label for="input-z">Z:</label>
-      <input id="input-z" type="number" value="0">
+    <div id="equations">
+      <label for="equation">Equation:</label>
+      <input type="text" id="equation" /><br />
+      <button id="plot">Plot</button>
+
+      <div id="matrix">
+        <label for="matrix-input">Matrix:</label>
+        <input type="text" id="matrix-input" /><br />
+      </div>
+  
+      <div id="vector">
+        <label for="vector-input">Vector:</label>
+        <input type="text" id="vector-input" /><br />
+      </div>
+  
+      <button id="apply">Apply</button>
+  
+      <button id="clear">Clear</button>
+
+      <div id = "gaussian-matrix" >
+        <label for="gaussian-matrix-input">Gaussian Matrix:</label>
+        <input type="text" id="gaussian-matrix-input" placeholder="1, 4, 5, 3, 2, 1, 1, 2, 3" /><br />
+      </div>
+
+      <button id="gaussian-apply">Gaussian Apply</button>
     </div>
 		<script type="module" src="main.js"></script>
 	</body>
