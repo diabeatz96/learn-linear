@@ -55,7 +55,6 @@ const material = new THREE.LineBasicMaterial({
 const points = [];
 points.push( new THREE.Vector3( - 2, 0, 0 ) );
 points.push( new THREE.Vector3( 0, 2, 0 ) );
-points.push( new THREE.Vector3( 2, 2, 2 ) );
 
 const geometry = new THREE.BufferGeometry().setFromPoints( points );
 
