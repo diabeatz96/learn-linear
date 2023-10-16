@@ -1,13 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>Learn Linear</title>
-		<style>
-			body { margin: 0; }
-		</style>
-	</head>
-	<body>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>My Three.js App</title>
+    <style>
+      #inputs-container {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 10px;
+        border-radius: 5px;
+      }
+      body {
+        margin: 0;
+      }
+      input {
+        margin: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="main.js"></script>
+    <div id="inputs-container">
+      <label for="input-x">X:</label>
+      <input id="input-x" type="number" value="0">
+      <br>
+      <label for="input-y">Y:</label>
+      <input id="input-y" type="number" value="0">
+      <br>
+      <label for="input-z">Z:</label>
+      <input id="input-z" type="number" value="0">
+    </div>
 		<script type="module" src="main.js"></script>
 	</body>
 </html>
