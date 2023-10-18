@@ -39,28 +39,69 @@ const material = new THREE.LineBasicMaterial({
 
 const geometry = new THREE.BufferGeometry();
 
-const plotButton = document.getElementById("plot");
-plotButton.addEventListener("click", () => {
-  
-  const equation = document.getElementById("equation").value;
+// Get the button
+const plotButton = document.getElementById('plot');
 
-  const points = [];
+plotButton.addEventListener('click', function() {
+  // Get the checkboxes
+  const plotPlane1 = document.getElementById('plotPlane1').checked;
+  const plotPlane2 = document.getElementById('plotPlane2').checked;
 
-  for (let x = 1; x <= 1; x++) {
-    for (let y = 1; y <= 5; y++) {
-      for (let z = 1; z <= 1; z++) {
-        const result = eval(equation);
-        if (!isNaN(result)) {
-          const point = new THREE.Vector3(x, y, z);
-          points.push(point);
-          const length = point.length();
-          const arrowHelper = new THREE.ArrowHelper(point.normalize(), new THREE.Vector3(0, 0, 0), length, 0xff0000);
-          scene.add(arrowHelper);
-        }
-      }
-    }
+  let plane1, plane2;
+
+  // If the first checkbox is checked, plot the first plane
+  if (plotPlane1) {
+    // Get the input values for the first plane
+    const a1 = document.getElementById('x1').value;
+    const b1 = document.getElementById('y1').value;
+    const c1 = document.getElementById('z1').value;
+    const d1 = document.getElementById('solution1').value;
+
+    // Create the first plane from the equation a1x + b1y + c1z + d1 = 0
+    const planeNormal1 = new THREE.Vector3(a1, b1, c1);
+    const planeConstant1 = -d1;
+    plane1 = new THREE.Plane(planeNormal1, planeConstant1);
+
+    // Visualize the first plane with a helper
+    const planeHelper1 = new THREE.PlaneHelper(plane1, 8, 0xffff00);
+    scene.add(planeHelper1);
+  }
+
+  // If the second checkbox is checked, plot the second plane
+  if (plotPlane2) {
+    // Get the input values for the second plane
+    const a2 = document.getElementById('x2').value;
+    const b2 = document.getElementById('y2').value;
+    const c2 = document.getElementById('z2').value;
+    const d2 = document.getElementById('solution2').value;
+
+    // Create the second plane from the equation a2x + b2y + c2z + d2 = 0
+    const planeNormal2 = new THREE.Vector3(a2, b2, c2);
+    const planeConstant2 = -d2;
+    plane2 = new THREE.Plane(planeNormal2, planeConstant2);
+
+    // Visualize the second plane with a helper
+    const planeHelper2 = new THREE.PlaneHelper(plane2, 8, 0xff0000);
+    scene.add(planeHelper2);
+  }
+
+  // If both checkboxes are checked, plot the intersection line
+  if (plotPlane1 && plotPlane2) {
+    // Find the intersection line
+    const point = vertIntersectPlanes(plane1, plane2);
+    console.log(point);
+    
+    // Alternatively, visualize the intersection point with a small sphere
+    const sphereGeometry = new THREE.SphereGeometry(0.1, 32, 32);
+    const sphereMaterial = new THREE.MeshBasicMaterial({color: 0x00ff00});
+    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    sphere.position.set(point.x, point.y, point.z);
+    scene.add(sphere);
+
+
   }
 });
+
 
 const applyButton = document.getElementById("apply");
 
@@ -184,3 +225,27 @@ function animate() {
 }
 
 animate();
+
+
+
+function vertIntersectPlanes(p1, p2) {
+  let n1 = p1.normal, n2 = p2.normal;
+  let x1 = p1.coplanarPoint(new THREE.Vector3());
+  let x2 = p2.coplanarPoint(new THREE.Vector3());
+
+  // Calculate the direction of the intersection line
+  let direction = new THREE.Vector3().crossVectors(n1, n2);
+
+  // If the direction is zero, the planes are parallel and don't intersect
+  if (direction.lengthSq() === 0) {
+    return null;
+  }
+
+  // Calculate a point on the intersection line
+  let f1 = new THREE.Vector3().crossVectors(n2, direction).multiplyScalar(x1.dot(n1));
+  let f2 = new THREE.Vector3().crossVectors(direction, n1).multiplyScalar(x2.dot(n2));
+  let det = new THREE.Matrix3().set(n1.x, n1.y, n1.z, n2.x, n2.y, n2.z, direction.x, direction.y, direction.z).determinant();
+  let vectorSum = new THREE.Vector3().add(f1).add(f2);
+  let linePoint = new THREE.Vector3(vectorSum.x / det, vectorSum.y / det, vectorSum.z / det);
+  return linePoint;
+}
